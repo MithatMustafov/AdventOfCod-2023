@@ -1,1 +1,114 @@
-aaaa
+#include <iostream>
+#include <fstream>
+#include <string>
+
+void loadArray(std::string*& calibrationDocument, int& calibrationDocumentSize);
+
+int main() {
+    // Get the Calibration Document data
+    int calibrationDocumentSize;
+    std::string* calibrationDocument;
+    loadArray(calibrationDocument, calibrationDocumentSize);
+
+    std::cout << "Advent of Code: Day1" << std::endl;
+
+    // Print the Calibration Document
+    /*
+    std::cout << calibrationDocumentSize << std::endl;
+    for (int i = 0; i < calibrationDocumentSize; ++i)
+        std::cout << calibrationDocument[i] << std::endl;
+    */
+    int sum = 0;
+    std::string numbersString[] = {"one","two","three","four","five","six","seven","eight","nine"};
+    std::string numbersInt[] = {"1","2","3","4","5","6","7","8","9" };
+    for (int i = 0; i < calibrationDocumentSize; i++)
+    {
+        calibrationDocument[i] += "|EzClaps";
+        std::cout << calibrationDocument[i] << std::endl;
+        std::string tempNum="";
+
+        for (int startIndex = 0; startIndex < calibrationDocument[i].size(); startIndex++)
+        {
+            std::string tempNumber =  calibrationDocument[i].substr(startIndex,5);
+            //std::cout << tempNumber << std::endl;
+            for (int k = 0; k < 9; k++)
+            {
+                //bool tempbool = false;
+                if (!tempNumber.find(numbersString[k]))
+                {
+                    //tempbool = true;
+                    //std::cout << tempbool << std::endl;
+                   calibrationDocument[i] = calibrationDocument[i].substr(0, startIndex)+
+                        tempNumber.replace(tempNumber.find(numbersString[k]), numbersString[k].size(),numbersInt[k]+ numbersString[k][numbersString[k].size()-1])+
+                        calibrationDocument[i].substr(startIndex+5, calibrationDocument[i].size()-startIndex);
+                   break;
+                }
+            }
+        }
+
+
+        std::cout << calibrationDocument[i] << std::endl;
+        for (int j = 0; j < calibrationDocument[i].size(); j++)
+        {
+            char tempChar = calibrationDocument[i][j];
+            if (tempChar >= '1' && tempChar <= '9')
+                tempNum += tempChar;
+        }
+        std::cout << tempNum << std::endl;
+        int tempSum = (tempNum[0] - 48) * 10 + tempNum[tempNum.size() - 1] - 48;
+        std::cout << tempSum << std::endl;
+        sum += tempSum;
+        std::cout << sum << std::endl;
+        
+    }
+
+    std::cout << sum << std::endl;
+
+    // Deallocate the memory
+    delete[] calibrationDocument;
+
+    return 0;
+}
+
+void loadArray(std::string*& calibrationDocument, int& calibrationDocumentSize) {
+    // Open the file
+    std::ifstream inputFile("C:\\Users\\User\\Desktop\\Advent of Code\\AoC-Day1\\Debug\\AoCDay1input.txt");
+
+    // Read the number of lines from the first line of the file
+    inputFile >> calibrationDocumentSize;
+
+    // Consume the newline character after reading the count
+    inputFile.ignore();
+
+    // Dynamically allocate an array to store lines
+    calibrationDocument = new std::string[calibrationDocumentSize];
+
+    // Read and store each line in the array
+    for (int i = 0; i < calibrationDocumentSize; ++i)
+        std::getline(inputFile, calibrationDocument[i]);
+
+    // Close the file
+    inputFile.close();
+}
+
+
+/*
+* Part 1
+*     for (int i = 0; i < calibrationDocumentSize; i++)
+    {
+        std::cout << calibrationDocument[i] << std::endl;
+        std::string tempNum="";
+        for (int j = 0; j < calibrationDocument[i].size(); j++)
+        {
+            char tempChar = calibrationDocument[i][j];
+            if (tempChar >= '1' && tempChar <= '9')
+                tempNum += tempChar;
+        }
+        std::cout << tempNum << std::endl;
+        int tempSum = (tempNum[0]-48) * 10 + tempNum[tempNum.size()-1] -48 ;
+        std::cout << tempSum << std::endl;
+        sum += tempSum;
+        std::cout << sum << std::endl;
+
+    }
+*/
